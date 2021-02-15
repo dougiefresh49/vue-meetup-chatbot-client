@@ -12,7 +12,7 @@ import Chat from "./components/Chat.vue";
 import LoginModal from "./components/LoginModal.vue";
 import Sidebar from "./components/Sidebar.vue";
 
-const socket = io("https://8sxfw.sse.codesandbox.io");
+const socket = io("https://9ufpt.sse.codesandbox.io");
 
 socket.on("chat message", (msg) => {
   state.messages.push(msg);
