@@ -1,7 +1,7 @@
 <template>
   <div class="user">
     <span class="avatar" :style="{ backgroundColor: user.color, color: foregroundColor }">{{ acronym }}</span>
-    {{ props.user.firstName }} {{ props.user.lastName }}
+    <span class="name">{{ props.user.firstName }} {{ props.user.lastName }}</span>
   </div>
 </template>
 
@@ -26,10 +26,14 @@ export default defineComponent({
 
 <style lang="postcss" scoped>
 .avatar {
-  @apply rounded-full h-10 w-10 flex items-center justify-center font-bold mr-3;
+  @apply rounded-full h-10 w-10 flex items-center justify-center font-bold md:mr-3;
 }
 
 .user {
   @apply flex items-center py-2;
+}
+
+.name {
+  @apply hidden md:inline-block;
 }
 </style>
