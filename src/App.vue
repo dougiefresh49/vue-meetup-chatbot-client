@@ -1,17 +1,15 @@
 <template>
   <div id="root">
-    <div v-if="!state.connectionError">
-      <Sidebar :users="state.users" />
-      <Chat
-        :messages="state.messages"
-        @message="message"
-        :loggedIn="state.loggedIn"
-      />
-      <LoginModal v-if="!state.loggedIn" @login="login" />
-    </div>
-    <div v-if="state.connectionError">
-      An error occurred connecting to the chat server
-    </div>
+    <Sidebar :users="state.users" />
+    <Chat
+      :messages="state.messages"
+      @message="message"
+      :loggedIn="state.loggedIn"
+    />
+    <LoginModal
+      v-if="!state.loggedIn && !state.connectionError"
+      @login="login"
+    />
   </div>
 </template>
 
@@ -32,6 +30,9 @@ const state = reactive({
   connectionError: false,
 });
 
+// Note: get user from previous session if available
+const USER_STORAGE_KEY = "dvm:user";
+
 // TODO: fill in
 const SOCKET_ENDPOINT = "";
 let socket;
@@ -39,6 +40,7 @@ let socket;
 try {
   socket = io(SOCKET_ENDPOINT);
   state.connectionError = false;
+  checkForCachedUser();
 } catch (e) {
   console.error(`[ERROR] connection error: ${e.message}`);
   state.connectionError = true;
@@ -50,11 +52,10 @@ try {
 // TODO: fill in
 // HINT: add listener for when a new message added to the stream
 
-// Note: get user from previous session if available
-const USER_STORAGE_KEY = "dvm:user";
-const storedUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
-
-if (storedUser) login(storedUser);
+function checkForCachedUser() {
+  const userFromCache = localStorage.getItem(USER_STORAGE_KEY);
+  userFromCache && login(JSON.parse(userFromCache));
+}
 
 function login(user) {
   if (!user.color) user.color = getRandomColor();
@@ -70,6 +71,7 @@ function login(user) {
 function message(message) {
   // TODO: fill in
   // HINT: tell server there is a new message
+  console.log(`sent a new message: ${message}`);
 }
 </script>
 
