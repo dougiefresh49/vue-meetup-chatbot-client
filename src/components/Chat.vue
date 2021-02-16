@@ -1,7 +1,12 @@
 <template>
   <main>
     <div class="message-container" ref="containerEl">
-      <ChatMessage v-for="message in props.messages" :message="message" :key="message.id"/>
+      <ChatMessage
+        v-for="message in props.messages"
+        :message="message"
+        :key="message.id"
+      />
+      <div class="message-container--bottom" />
     </div>
     <form novalidate @submit="sendMessage">
       <input v-model="state.message" ref="inputEl" />
@@ -10,11 +15,11 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, onMounted, watchEffect, computed } from "vue";
-import ChatMessage from './ChatMessage.vue';
+import { defineComponent, reactive, ref, watchEffect } from "vue";
+import ChatMessage from "./ChatMessage.vue";
 
 export default defineComponent({
-  props: ['messages', 'loggeIn'],
+  props: ["messages", "loggeIn"],
   components: { ChatMessage },
   setup(props, { emit }) {
     const containerEl = ref(null);
@@ -26,10 +31,20 @@ export default defineComponent({
     });
 
     watchEffect(() => {
-      if (containerEl.value && props.messages.length) {
-        // TODO: not working
-        console.log('scrolling...');
-        containerEl.value.scrollIntoView(false);
+      if (
+        !props.messages.length ||
+        containerEl === null ||
+        containerEl.value === null
+      ) {
+        return;
+      }
+      const el = containerEl.value.getElementsByClassName(
+        "message-container--bottom"
+      )[0];
+      if (el) {
+        el.style.marginBottom = "72px";
+        el.scrollIntoView({ behavior: "smooth" });
+        el.style.marginBottom = "1px";
       }
     });
 
@@ -59,6 +74,9 @@ export default defineComponent({
 <style scoped lang="postcss">
 .message-container {
   @apply p-5 flex-1 h-screen overflow-y-scroll;
+}
+.message-container--bottom {
+  margin-bottom: 1px;
 }
 
 main {
