@@ -1,21 +1,35 @@
 <template>
   <div class="user">
-    <span class="avatar">{{ acronym }}</span>
+    <span class="avatar" :style="{ backgroundColor: user.color, color: foregroundColor }">{{ acronym }}</span>
     {{ props.user.firstName }} {{ props.user.lastName }}
   </div>
 </template>
 
 <script>
-import { createComponent } from "vue";
+import { defineComponent } from "vue";
+import { shouldUseDarkForeground } from '../utils/colors.js';
 
-export default createComponent({
+export default defineComponent({
   props: ["user"],
   setup(props) {
-    const acronym = `${props.user.firstName[0].toUpperCase()} ${props.user.lastName[0].toUpperCase()}`;
+    const acronym = `${props.user.firstName[0].toUpperCase()}${props.user.lastName[0].toUpperCase()}`;
+    const foregroundColor = shouldUseDarkForeground(props.user.color) ? '#000' : '#fff';
+
     return {
       acronym,
-      props,
+      foregroundColor,
+      props
     };
   },
 });
 </script>
+
+<style lang="postcss" scoped>
+.avatar {
+  @apply rounded-full h-10 w-10 flex items-center justify-center font-bold mr-3;
+}
+
+.user {
+  @apply flex items-center py-2;
+}
+</style>

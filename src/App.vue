@@ -8,9 +8,12 @@
 
 <script setup>
 import { reactive } from "vue";
+
 import Chat from "./components/Chat.vue";
 import LoginModal from "./components/LoginModal.vue";
 import Sidebar from "./components/Sidebar.vue";
+
+import { getRandomColor } from './utils/colors';
 
 const socket = io("https://9ufpt.sse.codesandbox.io");
 
@@ -30,7 +33,9 @@ socket.on("user list updated", (users) => {
   state.users = users;
 });
 
+
 function login(user) {
+  user.color = getRandomColor();
   socket.emit("login", user);
   state.loggedIn = true;
   state.user = user;
