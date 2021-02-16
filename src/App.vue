@@ -29,7 +29,6 @@ const state = reactive({
 });
 
 socket.on("user list updated", (users) => {
-  console.log(users);
   state.users = users;
 });
 
@@ -44,6 +43,7 @@ function login(user) {
 function message(message) {
   socket.emit("chat message", {
     name: `${state.user.firstName} ${state.user.lastName}`,
+    nameColor: state.user.color,
     time: new Date(),
     text: message,
   });

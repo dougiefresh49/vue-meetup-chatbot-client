@@ -1,16 +1,7 @@
 <template>
   <main>
-    <div class="message-container">
-      <div
-        v-for="message in props.messages"
-        class="message-wrapper"
-        :key="message.id"
-      >
-        <div class="message-from">{{ message.name }}</div>
-        <div class="message-bubble">
-          <div class="message-bubble-text">{{ message.text }}</div>
-        </div>
-      </div>
+    <div class="message-container" ref="containerEl">
+      <ChatMessage v-for="message in props.messages" :message="message" :key="message.id"/>
     </div>
     <form novalidate @submit="sendMessage">
       <input v-model="state.message" />
@@ -19,14 +10,26 @@
 </template>
 
 <script>
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref, onMounted, watchEffect, computed } from "vue";
+import ChatMessage from './ChatMessage.vue';
 
 export default defineComponent({
   props: ["messages"],
+  components: { ChatMessage },
   setup(props, { emit }) {
+    const containerEl = ref(null);
+
     const state = reactive({
       message: "",
       messages: [],
+    });
+
+    watchEffect(() => {
+      if (containerEl.value && props.messages.length) {
+        // TODO: not working
+        console.log('scrolling...');
+        containerEl.value.scrollIntoView(false);
+      }
     });
 
     function sendMessage(e) {
@@ -36,33 +39,22 @@ export default defineComponent({
     }
 
     return {
-      state,
+      containerEl,
       props,
       sendMessage,
+      state,
     };
   },
 });
 </script>
 
 <style scoped lang="postcss">
-main {
-  @apply h-full w-full flex flex-col;
-}
-
 .message-container {
   @apply p-5 flex-1 h-screen overflow-y-scroll;
 }
 
-.message-wrapper {
-  @apply py-3 flex flex-col items-start;
-}
-
-.message-from {
-  @apply text-purple-300 text-sm;
-}
-
-.message-bubble {
-  @apply bg-gray-700 max-w-2xl w-full px-5 py-3 mt-1 rounded-full;
+main {
+  @apply h-full w-full flex flex-col;
 }
 
 form {
