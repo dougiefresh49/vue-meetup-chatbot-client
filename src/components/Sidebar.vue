@@ -1,43 +1,40 @@
 <template>
-	<nav>
-		<div v-for="user in usersWithAcronyms" class="user">
-			<span class="avatar">{{user.acronym}}</span>{{user.firstName}} {{user.lastName}}
-		</div>
-	</nav>
+  <h1>Test</h1>
 </template>
 
 <script>
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent } from "vue";
+import SidebarUser from "./SidebarUser.vue";
 
 export default defineComponent({
-	props: ['users'],
-	setup(props) {
+  props: ["users"],
+  components: { SidebarUser },
+  setup(props) {
+    const usersWithAcronyms = computed(() => {
+      return props.users.map((u) => ({
+        ...u,
+        acronym: `${u.firstName[0].toUpperCase()}${u.lastName[0].toUpperCase()}`,
+      }));
+    });
 
-		const usersWithAcronyms = computed(() => {
-			return props.users.map(u => ({
-				...u,
-				acronym: `${u.firstName[0].toUpperCase()}${u.lastName[0].toUpperCase()}`
-			}));
-		});
-
-		return {
-			props,
-			usersWithAcronyms
-		};
-	}
+    return {
+      props,
+      usersWithAcronyms,
+    };
+  },
 });
 </script>
 
-<style>
+<style lang="postcss">
 .avatar {
-	@apply rounded-full h-10 w-10 flex items-center justify-center bg-red-400 font-bold mr-3;
+  @apply rounded-full h-10 w-10 flex items-center justify-center bg-red-400 font-bold mr-3;
 }
 
 .user {
-	@apply flex items-center;
+  @apply flex items-center py-2;
 }
 
 nav {
-	@apply w-1/4 h-full p-3 bg-gray-900;
+  @apply w-1/4 h-full p-3 bg-gray-900;
 }
 </style>

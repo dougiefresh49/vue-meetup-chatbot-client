@@ -26,6 +26,7 @@ const state = reactive({
 });
 
 socket.on("user list updated", (users) => {
+  console.log(users);
   state.users = users;
 });
 
