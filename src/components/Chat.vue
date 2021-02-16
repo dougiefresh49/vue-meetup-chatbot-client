@@ -4,7 +4,7 @@
       <ChatMessage v-for="message in props.messages" :message="message" :key="message.id"/>
     </div>
     <form novalidate @submit="sendMessage">
-      <input v-model="state.message" />
+      <input v-model="state.message" ref="inputEl" />
     </form>
   </main>
 </template>
@@ -14,10 +14,11 @@ import { defineComponent, reactive, ref, onMounted, watchEffect, computed } from
 import ChatMessage from './ChatMessage.vue';
 
 export default defineComponent({
-  props: ["messages"],
+  props: ['messages', 'loggeIn'],
   components: { ChatMessage },
   setup(props, { emit }) {
     const containerEl = ref(null);
+    const inputEl = ref(null);
 
     const state = reactive({
       message: "",
@@ -32,6 +33,12 @@ export default defineComponent({
       }
     });
 
+    watchEffect(() => {
+      if (inputEl.value) {
+        inputEl.value.focus();
+      }
+    });
+
     function sendMessage(e) {
       e.preventDefault();
       emit("message", state.message);
@@ -40,6 +47,7 @@ export default defineComponent({
 
     return {
       containerEl,
+      inputEl,
       props,
       sendMessage,
       state,

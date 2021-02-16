@@ -1,7 +1,7 @@
 <template>
   <div id="root">
     <Sidebar :users="state.users" />
-    <Chat :messages="state.messages" @message="message" />
+    <Chat :messages="state.messages" @message="message" :loggedIn="state.loggedIn" />
     <LoginModal v-if="!state.loggedIn" @login="login" />
   </div>
 </template>
@@ -32,9 +32,13 @@ socket.on("user list updated", (users) => {
   state.users = users;
 });
 
+const storedUser = JSON.parse(localStorage.getItem('user'));
+
+if (storedUser) login(storedUser);
 
 function login(user) {
-  user.color = getRandomColor();
+  if (!user.color) user.color = getRandomColor();
+  localStorage.setItem('user', JSON.stringify(user));
   socket.emit("login", user);
   state.loggedIn = true;
   state.user = user;
