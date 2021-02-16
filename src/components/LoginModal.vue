@@ -37,8 +37,6 @@ export default defineComponent({
     function submit(e) {
       e.preventDefault();
 
-      state.submitted = true;
-
       if (!state.firstName) {
         state.firstNameError = "First name is required";
       } else {
@@ -56,6 +54,7 @@ export default defineComponent({
           firstName: state.firstName,
           lastName: state.lastName,
         });
+        state.submitted = true;
       }
     }
 

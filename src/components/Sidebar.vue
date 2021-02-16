@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 import SidebarUser from "./SidebarUser.vue";
-import SidebarContainer from './SidebarContainer.vue';
+import SidebarContainer from "./SidebarContainer.vue";
 
 export default defineComponent({
   props: ["users"],
@@ -19,4 +19,3 @@ export default defineComponent({
   },
 });
 </script>
-

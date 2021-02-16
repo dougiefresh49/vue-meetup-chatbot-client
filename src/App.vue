@@ -1,7 +1,11 @@
 <template>
   <div id="root">
     <Sidebar :users="state.users" />
-    <Chat :messages="state.messages" @message="message" :loggedIn="state.loggedIn" />
+    <Chat
+      :messages="state.messages"
+      @message="message"
+      :loggedIn="state.loggedIn"
+    />
     <LoginModal v-if="!state.loggedIn" @login="login" />
   </div>
 </template>
@@ -13,9 +17,10 @@ import Chat from "./components/Chat.vue";
 import LoginModal from "./components/LoginModal.vue";
 import Sidebar from "./components/Sidebar.vue";
 
-import { getRandomColor } from './utils/colors';
+import { getRandomColor } from "./utils/colors";
 
-const socket = io("https://9ufpt.sse.codesandbox.io");
+const SOCKET_ENDPOINT = "https://9ufpt.sse.codesandbox.io";
+const socket = io(SOCKET_ENDPOINT);
 
 socket.on("chat message", (msg) => {
   state.messages.push(msg);
@@ -32,13 +37,15 @@ socket.on("user list updated", (users) => {
   state.users = users;
 });
 
-const storedUser = JSON.parse(localStorage.getItem('user'));
+// Note: get user from previous session if available
+const USER_STORAGE_KEY = "dvm:user";
+const storedUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY));
 
 if (storedUser) login(storedUser);
 
 function login(user) {
   if (!user.color) user.color = getRandomColor();
-  localStorage.setItem('user', JSON.stringify(user));
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
   socket.emit("login", user);
   state.loggedIn = true;
   state.user = user;
