@@ -50,11 +50,11 @@ main {
 }
 
 .message-container {
-  @apply p-5 max-w-3xl flex-1;
+  @apply p-5 flex-1 h-screen overflow-y-scroll;
 }
 
 .message-wrapper {
-  @apply py-3;
+  @apply py-3 flex flex-col items-start;
 }
 
 .message-from {
@@ -62,7 +62,7 @@ main {
 }
 
 .message-bubble {
-  @apply bg-gray-700 px-5 py-3 mt-1 rounded-full;
+  @apply bg-gray-700 max-w-2xl w-full px-5 py-3 mt-1 rounded-full;
 }
 
 form {
